@@ -1,5 +1,6 @@
 <?php
 
+use App\Events\Test;
 use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
@@ -14,11 +15,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/broadcast', function () {
+  broadcast(new Test());
+});
 
 Route::get('/{any}', function () {
   return view('index');
 })->where('any', '.*');
-
-// Auth::routes();
-
-// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
