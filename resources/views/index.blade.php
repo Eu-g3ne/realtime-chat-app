@@ -14,6 +14,7 @@
 <body>
   <div id="app">
     <v-header></v-header>
+    <router-view></router-view>
   </div>
   <script src="{{ mix('js/app.js') }}" defer></script>
 </body>
