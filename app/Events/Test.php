@@ -27,7 +27,7 @@ class Test implements ShouldBroadcast
   public function broadcastWith()
   {
     return [
-      'hello' => 'there'
+      'hello' => 'test'
     ];
   }
 
@@ -38,6 +38,11 @@ class Test implements ShouldBroadcast
    */
   public function broadcastOn()
   {
-    return new Channel('channel-name');
+    return new Channel('channel');
+  }
+
+  public function broadcastAs()
+  {
+    return 'test';
   }
 }
