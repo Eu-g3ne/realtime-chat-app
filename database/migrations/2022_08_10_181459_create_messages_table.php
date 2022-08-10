@@ -1,10 +1,12 @@
 <?php
 
+use App\Models\Thread;
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateUsersTable extends Migration
+class CreateMessagesTable extends Migration
 {
   /**
    * Run the migrations.
@@ -13,11 +15,12 @@ class CreateUsersTable extends Migration
    */
   public function up()
   {
-    Schema::create('users', function (Blueprint $table) {
+    Schema::create('messages', function (Blueprint $table) {
       $table->id();
-      $table->string('nickname')->unique();
-      $table->string('password');
-      $table->rememberToken();
+      $table->foreignIdFor(User::class);
+      $table->foreignIdFor(Thread::class);
+      $table->text('body');
+      $table->timestamps();
     });
   }
 
@@ -28,6 +31,6 @@ class CreateUsersTable extends Migration
    */
   public function down()
   {
-    Schema::dropIfExists('users');
+    Schema::dropIfExists('messages');
   }
 }
