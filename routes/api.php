@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\MessageController;
+use App\Http\Controllers\ThreadController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +17,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::post('register', [AuthController::class, 'register']);
+Route::post('login', [AuthController::class, 'login']);
+
+Route::middleware('auth:sanctum')->group(function () {
+  Route::prefix('threads')->group(function () {
+    Route::get('/', [ThreadController::class, 'index']);
+    Route::prefix('{thread}')->group(function () {
+      Route::get('/', [ThreadController::class, 'participants']);
+      Route::get('messages', [MessageController::class, 'index']);
+    });
+  });
+  Route::post('logout', [AuthController::class, 'logout']);
 });
