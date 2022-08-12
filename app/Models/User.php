@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -20,10 +19,12 @@ class User extends Authenticatable
    * @var array<int, string>
    */
   protected $fillable = [
-    'name',
+    'nickname',
     'password',
   ];
 
+
+  public $timestamps = false;
   /**
    * The attributes that should be hidden for serialization.
    *
@@ -44,10 +45,8 @@ class User extends Authenticatable
     return $this->belongsToMany(Thread::class, 'participants', 'user_id', 'thread_id');
   }
 
-  protected function password(): Attribute
+  protected function setPasswordAttribute($value)
   {
-    return Attribute::make(
-      set: fn ($value) => bcrypt($value),
-    );
+    $this->attributes['password'] = bcrypt($value);
   }
 }
