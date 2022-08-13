@@ -22,4 +22,11 @@ class Thread extends Model
   {
     return $this->belongsToMany(User::class, 'participants', 'thread_id', 'user_id');
   }
+
+  public function scopeForAuthenticatedUser($query)
+  {
+    return $query->whereHas('users', function ($q) {
+      $q->where('participants.user_id', auth()->user()->id);
+    });
+  }
 }
