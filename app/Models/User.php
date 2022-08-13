@@ -49,4 +49,11 @@ class User extends Authenticatable
   {
     $this->attributes['password'] = bcrypt($value);
   }
+
+  public function scopeLoadThread($query, $thread)
+  {
+    return $query->load(['messages' => function ($q) use ($thread) {
+      $q->where('thread_id', $thread->id);
+    }]);
+  }
 }
