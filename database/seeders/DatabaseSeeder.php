@@ -17,10 +17,12 @@ class DatabaseSeeder extends Seeder
    */
   public function run()
   {
-    $user = User::factory()->create();
-    $user2 = User::factory()->create();
-    $thread = Thread::factory()->hasAttached(collect([$user, $user2]))->create();
-    Message::factory()->count(3)->for($user)->for($thread)->create();
-    Message::factory()->count(3)->for($user2)->for($thread)->create();
+    for ($i = 0; $i < 5; $i++) {
+      $user = User::factory()->create();
+      $user2 = User::factory()->create();
+      $thread = Thread::factory()->hasAttached(collect([$user, $user2]))->create();
+      Message::factory()->count(3)->for($user)->for($thread)->create();
+      Message::factory()->count(3)->for($user2)->for($thread)->create();
+    }
   }
 }
