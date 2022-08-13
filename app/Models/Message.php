@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
+use DateTimeInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -23,8 +25,19 @@ class Message extends Model
   {
     return $this->belongsTo(User::class);
   }
+
   public function scopeWhereThread($q, Thread $thread)
   {
     return $q->where('thread_id', $thread->id);
+  }
+
+  protected function getCreatedAtAttribute($value)
+  {
+    return Carbon::createFromDate($value)->format('Y-m-d H:i:s');
+  }
+
+  protected function getUpdatedAtAttribute($value)
+  {
+    return Carbon::createFromDate($value)->format('Y-m-d H:i:s');
   }
 }
