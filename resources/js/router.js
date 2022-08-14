@@ -3,11 +3,23 @@ import vue from "vue"
 
 vue.use(VueRouter);
 const IndexView = () => import('./views/IndexView.vue')
+const ThreadView = () => import('./views/ThreadView.vue')
 
 const routes = [
   {
     path: '/',
-    component: IndexView
+    component: IndexView,
+    name:'index',
+    children:[{
+      path:'thread/:id',
+      name: 'thread',
+      component: ThreadView,
+      props(route) {
+        const props = { ...route.params }
+        props.id = +props.id
+        return props
+      },
+    }],
   }
 ]
 
