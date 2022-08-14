@@ -16,7 +16,7 @@ class UserResource extends JsonResource
   {
     return [
       'id' => $this->id,
-      'name' => $this->nickname,
+      'nickname' => $this->nickname,
       'messages' => MessageResource::collection($this->whenLoaded('messages'))
     ];
   }
