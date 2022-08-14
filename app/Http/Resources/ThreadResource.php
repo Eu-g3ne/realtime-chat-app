@@ -16,7 +16,8 @@ class ThreadResource extends JsonResource
   {
     return [
       'id' => $this->id,
-      'name' => $this->name
+      'name' => $this->name,
+      'message' => MessageResource::make($this->lastMessage)
     ];
   }
 }
