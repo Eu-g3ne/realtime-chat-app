@@ -1,13 +1,19 @@
 <template>
-  <div class="2xl:container mx-auto h-screen background">
+  <div class="2xl:container mx-auto h-screen background overflow-hidden">
     <div class="flex flex-row h-full gap-0">
       <v-sidebar class="sm:w-[450px]"></v-sidebar>
-      <div class="grow"><router-view></router-view></div>
+      <div
+        ref="scroll"
+        class="grow overflow-hidden"
+      >
+        <router-view></router-view>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import { mapActions } from "vuex";
 import vSidebar from "../components/Sidebar.vue";
 
 export default {
@@ -20,6 +26,10 @@ export default {
     // Echo.channel("channel").listen(".test", function (e) {
     //   console.log(e);
     // });
+    this.fetchAuthenticated();
+  },
+  methods: {
+    ...mapActions("user", ["fetchAuthenticated"]),
   },
 };
 </script>
@@ -39,5 +49,6 @@ export default {
   content: "";
   background-image: url("/img/pattern.svg");
   background-repeat: repeat;
+  will-change: transform; /* for fps */
 }
 </style>
