@@ -14,26 +14,19 @@
 </template>
 
 <script>
-import axios from "axios";
+import { mapGetters, mapActions } from "vuex";
 import vThread from "./Thread.vue";
 export default {
   name: "Sidebar",
   components: { vThread },
   data: function () {
-    return {
-      threads: [],
-    };
+    return {};
   },
   mounted() {
-    axios.get("threads").then((response) => {
-      this.threads = response.data;
-    });
+    this.fetchThreads();
   },
-  computed: {
-    lastMessage: function () {
-      return this.messages;
-    },
-  },
+  computed: { ...mapGetters("thread", ["threads"]) },
+  methods: { ...mapActions("thread", ["fetchThreads"]) },
 };
 </script>
 
