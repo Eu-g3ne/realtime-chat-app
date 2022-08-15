@@ -5,3 +5,11 @@
 * {
   font-family: 'Roboto';
 }
+::-webkit-scrollbar {
+  width: 7px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(105,105,105,0.7);
+  border-radius: 10px;
+  transition: all 0.5s;
+}
