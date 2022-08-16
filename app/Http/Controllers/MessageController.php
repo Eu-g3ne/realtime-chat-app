@@ -18,7 +18,7 @@ class MessageController extends Controller
   public function index(Thread $thread)
   {
     if ($thread->users->contains(auth()->user()->id)) {
-      return new MessageCollection(Message::whereThread($thread)->oldest()->get());
+      return new MessageCollection(Message::with('user')->whereThread($thread)->oldest()->get());
     }
   }
 

@@ -25,7 +25,7 @@ class Thread extends Model
 
   public function lastMessage()
   {
-    return $this->belongsTo(Message::class);
+    return $this->belongsTo(Message::class)->with('user');
   }
 
   public function scopeForAuthenticatedUser($query)

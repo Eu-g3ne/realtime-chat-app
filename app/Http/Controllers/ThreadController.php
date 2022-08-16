@@ -16,7 +16,7 @@ class ThreadController extends Controller
    */
   public function index()
   {
-    return new ThreadCollection(Thread::forAuthenticatedUser()->withLastMessage()->get());
+    return new ThreadCollection(Thread::forAuthenticatedUser()->withLastMessage()->with('users')->get());
   }
 
   public function participants($id)
