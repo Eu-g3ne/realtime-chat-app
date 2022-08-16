@@ -6,7 +6,15 @@ export default {
   getters: {
     threads(state) {
       return state.threads
-    }
+    },
+    nameById:(state) => (id) => {
+      let thread = state.threads.find(thread => thread.id === id)
+      return thread ? thread.name : '';
+    },
+    membersById:(state) => (id) => {
+      let thread = state.threads.find(thread => thread.id === id)
+      return thread ? thread.participants.length : 0;
+    },
   },
   actions: {
     fetchThreads({ commit }) {
