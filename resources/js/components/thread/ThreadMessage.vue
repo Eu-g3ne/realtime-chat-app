@@ -1,6 +1,9 @@
 <template>
-  <div :class="isOwn">
-    <div class="rounded-xl bg-green-400 w-fit flex">
+  <div
+    :class="isOwn"
+    class="max-w-[70%] w-fit"
+  >
+    <div class="rounded-xl bg-green-400 flex justify-between">
       <span class="p-2 text-black">{{ message.body }}</span>
       <span class="text-gray-600 text-[12px] place-self-end px-2">{{
         createdAt

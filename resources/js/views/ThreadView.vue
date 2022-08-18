@@ -1,7 +1,13 @@
 <template>
-  <div class="flex flex-col gap-1 h-full">
+  <div class="flex flex-col h-full">
+    <div class="w-full bg-white shadow-md p-2">
+      <div class="font-bold text-black text-lg">{{ nameById(this.id) }}</div>
+      <div class="font-light text-gray-500">
+        {{ membersById(this.id) }} members
+      </div>
+    </div>
     <div
-      class="p-5 basis-[90%] h-full overflow-y-scroll"
+      class="p-5 h-full overflow-y-scroll"
       ref="messages"
     >
       <div class="flex flex-col h-full gap-4">
@@ -12,11 +18,9 @@
         />
       </div>
     </div>
-    <div
-      class="flex flex-row justify-center items-center gap-2 px-5 basis-[10%]"
-    >
+    <div class="flex flex-row justify-center items-center gap-2 px-5 mt-1 mb-2">
       <input
-        class="h-[50px] w-full rounded-xl block px-2"
+        class="h-[50px] w-full rounded-xl block px-2 drop-shadow-2xl"
         type="text"
       />
       <button
@@ -44,7 +48,7 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
-import vMessage from "../components/thread/vMessage.vue";
+import vMessage from "../components/thread/ThreadMessage.vue";
 export default {
   data: function () {
     return {};
@@ -81,6 +85,7 @@ export default {
   },
   computed: {
     ...mapGetters("message", ["messages"]),
+    ...mapGetters("thread", ["nameById", "membersById"]),
   },
 };
 </script>

@@ -14,7 +14,7 @@
 
 <script>
 import { mapActions } from "vuex";
-import vSidebar from "../components/Sidebar.vue";
+import vSidebar from "../components/sidebar/Sidebar.vue";
 
 export default {
   data: function () {

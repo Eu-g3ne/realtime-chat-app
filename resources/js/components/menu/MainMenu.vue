@@ -20,13 +20,15 @@
       <v-menu-items>
         <v-menu-item>Profile</v-menu-item>
         <v-menu-item>Settings</v-menu-item>
-        <v-menu-item @click.native="logout()">Logout</v-menu-item>
+        <v-menu-item @click.native="unauthenticate()">Logout</v-menu-item>
       </v-menu-items>
     </v-menu>
   </div>
 </template>
 
 <script>
+import { mapActions } from "vuex";
+import router from "../../router";
 import vMenu from "./Menu.vue";
 import vMenuButton from "./MenuButton.vue";
 import vMenuItem from "./MenuItem.vue";
@@ -34,8 +36,11 @@ import vMenuItems from "./MenuItems.vue";
 export default {
   components: { vMenu, vMenuButton, vMenuItem, vMenuItems },
   methods: {
-    logout() {
-      alert("logout");
+    ...mapActions("user", ["logout"]),
+    unauthenticate() {
+      this.logout().then(() => {
+        router.push("/login");
+      });
     },
   },
 };
