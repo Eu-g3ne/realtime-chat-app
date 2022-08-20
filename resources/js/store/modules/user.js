@@ -3,6 +3,7 @@ import axios from "axios"
 export default {
   namespaced: true,
   state: {
+    users: [],
     user: {}
   },
   getters: {
@@ -11,6 +12,9 @@ export default {
     },
     nickname(state) {
       return state.user.nickname
+    },
+    users(state) {
+      return state.users
     }
   },
   actions: {
@@ -29,11 +33,22 @@ export default {
         localStorage.removeItem('apiToken');
         commit('setUser', {});
       })
+    },
+    async getByNickname({commit}, nickname) {
+      await axios.get('/users', {
+        nickname: nickname
+      }).then(res => {
+        console.log(res.data);
+        commit('setUsers', res.data.users);
+      })
     }
   },
   mutations: {
     setUser(state, user) {
       state.user = user;
+    },
+    setUsers(state, users) {
+      state.users = users;
     }
   }
 }

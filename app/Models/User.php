@@ -56,4 +56,9 @@ class User extends Authenticatable
       $q->where('thread_id', $thread->id);
     }]);
   }
+
+  public function scopeWhereNicknameLike($query, $nickname)
+  {
+    return $query->where('nickname', 'like', $nickname . '%');
+  }
 }
