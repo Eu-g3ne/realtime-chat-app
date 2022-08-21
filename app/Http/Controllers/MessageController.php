@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\GeneralJsonException;
 use App\Http\Resources\MessageCollection;
 use App\Http\Resources\UserCollection;
 use App\Models\Message;
 use App\Models\Thread;
+use Exception;
 use Illuminate\Http\Request;
 
 class MessageController extends Controller
@@ -19,6 +21,8 @@ class MessageController extends Controller
   {
     if ($thread->users->contains(auth()->user()->id)) {
       return new MessageCollection(Message::with('user')->whereThread($thread)->oldest()->get());
+    } else {
+      throw new GeneralJsonException('Unauthorized', 403);
     }
   }
 
