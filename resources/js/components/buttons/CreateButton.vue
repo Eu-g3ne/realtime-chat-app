@@ -1,7 +1,7 @@
 <template>
   <button
     type="button"
-    class="btn-component text-gray-700 hover:bg-gray-200 focus:ring-gray-500"
+    class="btn-component text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-yellow-500"
     @click="$emit('click')"
   >
     <slot />
