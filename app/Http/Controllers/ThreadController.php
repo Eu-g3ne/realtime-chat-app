@@ -2,13 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Thread\StoreRequest;
 use App\Http\Resources\ParticipantCollection;
 use App\Http\Resources\ThreadCollection;
+use App\Http\Resources\ThreadResource;
 use App\Models\Thread;
+use App\Repositories\Interfaces\ThreadRepositoryInterface;
 use Illuminate\Http\Request;
 
 class ThreadController extends Controller
 {
+
+  private $threadRepository;
+
+  public function __construct(ThreadRepositoryInterface $threadRepository)
+  {
+    $this->threadRepository = $threadRepository;
+  }
+
   /**
    * Display a listing of the resource.
    *
@@ -16,7 +27,7 @@ class ThreadController extends Controller
    */
   public function index()
   {
-    return new ThreadCollection(Thread::forAuthenticatedUser()->withLastMessage()->with('users')->get());
+    return new ThreadCollection($this->threadRepository->all());
   }
 
   public function participants($id)
@@ -30,9 +41,9 @@ class ThreadController extends Controller
    * @param  \Illuminate\Http\Request  $request
    * @return \Illuminate\Http\Response
    */
-  public function store(Request $request)
+  public function store(StoreRequest $request)
   {
-    //
+    return new ThreadResource($this->threadRepository->save($request->validated()));
   }
 
   /**
