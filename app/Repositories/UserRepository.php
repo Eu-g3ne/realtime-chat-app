@@ -16,7 +16,7 @@ class UserRepository implements UserRepositoryInterface
 
   public function getByNickname(array $values): Collection
   {
-    return User::whereNicknameLike($values['nickname'])->get();
+    return User::whereNicknameLike($values['nickname'])->get()->except(auth()->id());
   }
 
   public function getById($id): User
