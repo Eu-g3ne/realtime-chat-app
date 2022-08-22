@@ -23,8 +23,8 @@ Route::post('login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
   Route::get('user', [AuthController::class, 'authenticated']);
+  Route::apiResource('threads', ThreadController::class)->except(['update', 'destroy', 'show']);
   Route::prefix('threads')->group(function () {
-    Route::get('/', [ThreadController::class, 'index']);
     Route::prefix('{thread}')->group(function () {
       Route::get('/', [ThreadController::class, 'participants']);
       Route::get('messages', [MessageController::class, 'index']);
