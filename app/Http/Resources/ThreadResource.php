@@ -18,7 +18,7 @@ class ThreadResource extends JsonResource
       'id' => $this->id,
       'name' => $this->name,
       'message' => MessageResource::make($this->whenLoaded('lastMessage')),
-      'participants' => $this->whenLoaded('users', function () {
+      'users' => $this->whenLoaded('users', function () {
         return $this->users->pluck('nickname');
       })
     ];
