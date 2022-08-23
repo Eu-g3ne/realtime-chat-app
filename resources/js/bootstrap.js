@@ -27,9 +27,15 @@ window.Pusher = require('pusher-js');
 
 window.Echo = new Echo({
   broadcaster: 'pusher',
+  authEndpoint: '/api/broadcasting/auth',
+  auth: {
+    headers: {
+      'Authorization':'Bearer '+localStorage.getItem('apiToken')
+    }
+  },
   key: 'local',
   wsHost: window.location.hostname,
   wsPort: 6001,
   forceTLS: false,
-  disableStats: true,
+  disableStats: true
 });

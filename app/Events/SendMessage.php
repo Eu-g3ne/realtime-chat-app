@@ -2,6 +2,9 @@
 
 namespace App\Events;
 
+use App\Http\Resources\MessageResource;
+use App\Models\Message;
+use App\Models\Thread;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -10,25 +13,26 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class Test implements ShouldBroadcast
+class SendMessage implements ShouldBroadcast
 {
   use Dispatchable, InteractsWithSockets, SerializesModels;
 
+  protected $thread;
+  protected $message;
   /**
    * Create a new event instance.
    *
    * @return void
    */
-  public function __construct()
+  public function __construct(Thread $thread, Message $message)
   {
-    //
+    $this->thread = $thread;
+    $this->message = $message;
   }
 
   public function broadcastWith()
   {
-    return [
-      'hello' => 'test'
-    ];
+    return (new MessageResource($this->message->load('user')))->resolve();
   }
 
   /**
@@ -38,6 +42,6 @@ class Test implements ShouldBroadcast
    */
   public function broadcastOn()
   {
-    return new PrivateChannel('channel');
+    return new PrivateChannel("thread.{$this->thread->id}");
   }
 }
