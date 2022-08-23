@@ -1,11 +1,18 @@
 export default {
   namespaced: true,
   state: {
-    threads: []
+    threads: [],
+    thread: {
+      name: '',
+      users: []
+    }
   },
   getters: {
     threads(state) {
       return state.threads
+    },
+    thread(state) {
+      return state.thread
     },
     nameById:(state) => (id) => {
       let thread = state.threads.find(thread => thread.id === id)
@@ -13,19 +20,36 @@ export default {
     },
     membersById:(state) => (id) => {
       let thread = state.threads.find(thread => thread.id === id)
-      return thread ? thread.participants.length : 0;
+      return thread ? thread.users.length : 0;
     },
+    users(state) {
+      return state.thread.users;
+    }
   },
   actions: {
-    fetchThreads({ commit }) {
-      axios.get("/threads").then((response) => {
+    async fetchThreads({ commit }) {
+      await axios.get("/threads").then((response) => {
         commit('updateThreads', response.data)
       });
+    },
+    async addThread({commit, getters}, thread) {
+      await axios.post('/threads', {
+        'name': thread.name,
+        'users': thread.users
+      }).then(res => {
+        console.log(res.data)
+        commit('updateThreads', [...getters.threads, res.data]);
+      }).catch(e => {
+        console.log(e.data)
+      })
     }
   },
   mutations: {
     updateThreads(state, threads) {
       state.threads = threads;
+    },
+    updateUsers(state, users) {
+      state.thread.users = users;
     }
   }
 }

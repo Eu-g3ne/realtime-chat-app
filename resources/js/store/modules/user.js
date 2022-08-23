@@ -35,12 +35,16 @@ export default {
       })
     },
     async getByNickname({commit}, nickname) {
-      await axios.get('/users', {
-        nickname: nickname
-      }).then(res => {
-        console.log(res.data);
-        commit('setUsers', res.data.users);
-      })
+      if(nickname !== '') {
+        await axios.get('/users', {
+          params:{
+            'nickname': nickname
+          }
+        }).then(res => {
+          console.log(_.map(res.data.users, 'nickname'));
+          commit('setUsers', res.data.users);
+        })
+      }
     }
   },
   mutations: {
