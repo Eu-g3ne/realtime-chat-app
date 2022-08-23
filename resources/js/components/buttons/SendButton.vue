@@ -1,6 +1,6 @@
 <template>
   <button
-    class="rounded-xl p-2 bg-green-400"
+    class="rounded-xl p-2 bg-yellow-400 duration-200 hover:bg-yellow-500"
     @click="$emit('click')"
   >
     <svg

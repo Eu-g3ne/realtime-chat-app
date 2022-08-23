@@ -1,5 +1,6 @@
 <?php
 
+use App\Events\Test;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\ThreadController;
@@ -32,4 +33,7 @@ Route::middleware('auth:sanctum')->group(function () {
   });
   Route::get('users', [UserController::class, 'index']);
   Route::post('logout', [AuthController::class, 'logout']);
+  Route::get('thread/1', function () {
+    broadcast(new Test());
+  });
 });

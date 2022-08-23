@@ -20,28 +20,11 @@
     </div>
     <div class="flex flex-row justify-center items-center gap-2 px-5 mt-1 mb-2">
       <input
-        class="h-[50px] w-full rounded-xl block px-2 drop-shadow-2xl"
+        class="h-[50px] w-full rounded-xl block px-2 shadow-md"
         type="text"
+        @keydown.enter="sendMessage"
       />
-      <button
-        class="rounded-xl p-2 bg-green-400"
-        @click="sendMessage"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-6 w-6"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          stroke-width="2"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"
-          />
-        </svg>
-      </button>
+      <v-send-button @click="sendMessage"></v-send-button>
     </div>
   </div>
 </template>
@@ -49,12 +32,16 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 import vMessage from "../components/thread/ThreadMessage.vue";
+import vSendButton from "../components/buttons/SendButton.vue";
+import vTextInput from "../components/forms/inputs/TextInput.vue";
+import Echo from "laravel-echo";
+
 export default {
   data: function () {
     return {};
   },
-  name: "Thread",
-  components: { vMessage },
+  name: "ThreadView",
+  components: { vMessage, vSendButton, vTextInput },
   props: {
     id: {
       type: Number,
@@ -63,6 +50,12 @@ export default {
   },
   mounted() {
     this.fetchMessages(this.id);
+    window.Echo.private("channel").listen("Test", (e) => {
+      console.log(e);
+    });
+    window.Echo.private("thread.1").listen("SendMessage", (e) => {
+      console.log(e);
+    });
   },
   updated() {
     this.$nextTick(function () {
