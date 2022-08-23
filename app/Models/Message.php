@@ -12,7 +12,8 @@ class Message extends Model
   use HasFactory;
 
   protected $fillable = [
-    'body'
+    'body',
+    'thread_id'
   ];
 
   public function thread(): BelongsTo

@@ -2,16 +2,28 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\SendMessage;
 use App\Exceptions\GeneralJsonException;
+use App\Http\Requests\Message\StoreRequest;
 use App\Http\Resources\MessageCollection;
+use App\Http\Resources\MessageResource;
 use App\Http\Resources\UserCollection;
 use App\Models\Message;
 use App\Models\Thread;
+use App\Repositories\Interfaces\MessageRepositoryInterface;
 use Exception;
 use Illuminate\Http\Request;
 
 class MessageController extends Controller
 {
+
+  protected $messageRepository;
+
+  public function __construct(MessageRepositoryInterface $messageRepository)
+  {
+    $this->messageRepository = $messageRepository;
+  }
+
   /**
    * Display a listing of the resource.
    *
@@ -20,7 +32,7 @@ class MessageController extends Controller
   public function index(Thread $thread)
   {
     if ($thread->users->contains(auth()->user()->id)) {
-      return new MessageCollection(Message::with('user')->whereThread($thread)->oldest()->get());
+      return new MessageCollection($this->messageRepository->getByThread($thread));
     } else {
       throw new GeneralJsonException('Unauthorized', 403);
     }
@@ -42,9 +54,11 @@ class MessageController extends Controller
    * @param  \Illuminate\Http\Request  $request
    * @return \Illuminate\Http\Response
    */
-  public function store(Request $request)
+  public function store(Thread $thread, StoreRequest $request)
   {
-    //
+    $message = $this->messageRepository->save($thread, $request->validated());
+    broadcast(new SendMessage($thread, $message));
+    return new MessageResource($message->load(['user', 'thread']));
   }
 
   /**
