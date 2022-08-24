@@ -22,23 +22,25 @@
       <input
         class="h-[50px] w-full rounded-xl block px-2 shadow-md"
         type="text"
-        @keydown.enter="sendMessage"
+        v-model="newMessage"
+        @keydown.enter="sendMessage(id, newMessage)"
       />
-      <v-send-button @click="sendMessage"></v-send-button>
+      <v-send-button @click="sendMessage(id, newMessage)"></v-send-button>
     </div>
   </div>
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters, mapMutations } from "vuex";
 import vMessage from "../components/thread/ThreadMessage.vue";
 import vSendButton from "../components/buttons/SendButton.vue";
 import vTextInput from "../components/forms/inputs/TextInput.vue";
-import Echo from "laravel-echo";
 
 export default {
   data: function () {
-    return {};
+    return {
+      newMessage: "",
+    };
   },
   name: "ThreadView",
   components: { vMessage, vSendButton, vTextInput },
@@ -50,12 +52,13 @@ export default {
   },
   mounted() {
     this.fetchMessages(this.id);
-    window.Echo.private("channel").listen("Test", (e) => {
-      console.log(e);
-    });
-    window.Echo.private("thread.1").listen("SendMessage", (e) => {
-      console.log(e);
-    });
+    window.Echo.private(`thread.${this.id}`).listen(
+      "SendMessage",
+      (message) => {
+        this.updateMessages([...this.messages, message]);
+        this.fetchThreads();
+      }
+    );
   },
   updated() {
     this.$nextTick(function () {
@@ -68,12 +71,16 @@ export default {
     },
   },
   methods: {
-    ...mapActions("message", ["fetchMessages"]),
+    ...mapActions("message", ["fetchMessages", "addMessage"]),
+    ...mapActions("thread", ["fetchThreads"]),
+    ...mapMutations("message", ["updateMessages"]),
     scrollToEnd() {
       this.$refs.messages.scrollTop = this.$refs.messages.scrollHeight;
     },
-    sendMessage() {
+    sendMessage(id, newMessage) {
       this.scrollToEnd();
+      this.addMessage({ threadId: id, message: newMessage });
+      this.newMessage = "";
     },
   },
   computed: {

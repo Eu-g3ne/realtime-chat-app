@@ -57,7 +57,7 @@ class MessageController extends Controller
   public function store(Thread $thread, StoreRequest $request)
   {
     $message = $this->messageRepository->save($thread, $request->validated());
-    broadcast(new SendMessage($thread, $message));
+    broadcast(new SendMessage($thread, $message))->toOthers();
     return new MessageResource($message->load(['user', 'thread']));
   }
 

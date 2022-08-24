@@ -1,3 +1,5 @@
+import axios from "axios";
+
 export default {
   namespaced: true,
   state: {
@@ -9,10 +11,18 @@ export default {
     }
   },
   actions: {
-    fetchMessages({ commit }, id) {
-      axios.get(`threads/${id}/messages`).then((res) => {
+    fetchMessages({ commit }, threadId) {
+      axios.get(`threads/${threadId}/messages`).then((res) => {
         commit('updateMessages', res.data)
       });
+    },
+    addMessage({commit, getters}, {threadId, message}) {
+      axios.post(`threads/${threadId}/messages`, {body:message}).then(res => {
+        console.log(res.data);
+        commit('updateMessages', [...getters.messages, res.data]);
+      }).catch(e => {
+        console.log(e.data)
+      })
     }
   },
   mutations: {
