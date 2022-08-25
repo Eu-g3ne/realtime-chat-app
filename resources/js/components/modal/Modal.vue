@@ -4,7 +4,7 @@
       <div>
         <div
           class="fixed inset-0 w-full h-full bg-black/50 flex justify-center items-center"
-          @click.self="close()"
+          @mousedown.self="close()"
         >
           <div
             class="relative bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full"
