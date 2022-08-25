@@ -15,6 +15,8 @@
           v-for="message in messages"
           :key="message.id"
           :message="message"
+          @edit="edit(message)"
+          @delete="del(message)"
         />
       </div>
     </div>
@@ -71,7 +73,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions("message", ["fetchMessages", "addMessage"]),
+    ...mapActions("message", ["fetchMessages", "addMessage", "removeMessage"]),
     ...mapActions("thread", ["fetchThreads"]),
     ...mapMutations("message", ["updateMessages"]),
     scrollToEnd() {
@@ -81,6 +83,12 @@ export default {
       this.scrollToEnd();
       this.addMessage({ threadId: id, message: newMessage });
       this.newMessage = "";
+    },
+    edit(message) {
+      console.log(this.id, message);
+    },
+    del(message) {
+      this.removeMessage({ threadId: this.id, message });
     },
   },
   computed: {

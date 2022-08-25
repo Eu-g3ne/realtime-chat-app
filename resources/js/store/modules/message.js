@@ -22,8 +22,13 @@ export default {
         commit('updateMessages', [...getters.messages, res.data]);
       }).catch(e => {
         console.log(e.data)
-      })
-    }
+      });
+    },
+    removeMessage({ commit, getters }, {threadId, message}) {
+      axios.delete(`threads/${threadId}/messages/${message.id}`).then(res => {
+        commit('updateMessages', getters.messages.filter(msg => msg.id !== res.data.id))
+      });
+    },
   },
   mutations: {
     updateMessages(state, messages) {
