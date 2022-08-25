@@ -28,7 +28,11 @@ Route::middleware('auth:sanctum')->group(function () {
   Route::prefix('threads')->group(function () {
     Route::prefix('{thread}')->middleware('participant')->group(function () {
       Route::get('/', [ThreadController::class, 'participants']);
-      Route::apiResource('messages', MessageController::class)->except(['update', 'destroy', 'show']);
+      Route::prefix('messages')->group(function () {
+        Route::get('/', [MessageController::class, 'index']);
+        Route::post('/', [MessageController::class, 'store']);
+        Route::delete('/{message}', [MessageController::class, 'destroy'])->middleware('message-owner');
+      });
     });
   });
   Route::get('users', [UserController::class, 'index']);
