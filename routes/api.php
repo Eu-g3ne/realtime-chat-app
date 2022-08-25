@@ -26,7 +26,7 @@ Route::middleware('auth:sanctum')->group(function () {
   Route::get('user', [AuthController::class, 'authenticated']);
   Route::apiResource('threads', ThreadController::class)->except(['update', 'destroy', 'show']);
   Route::prefix('threads')->group(function () {
-    Route::prefix('{thread}')->group(function () {
+    Route::prefix('{thread}')->middleware('participant')->group(function () {
       Route::get('/', [ThreadController::class, 'participants']);
       Route::apiResource('messages', MessageController::class)->except(['update', 'destroy', 'show']);
     });
