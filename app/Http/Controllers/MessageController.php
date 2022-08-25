@@ -31,11 +31,7 @@ class MessageController extends Controller
    */
   public function index(Thread $thread)
   {
-    if ($thread->users->contains(auth()->user()->id)) {
-      return new MessageCollection($this->messageRepository->getByThread($thread));
-    } else {
-      throw new GeneralJsonException('Unauthorized', 403);
-    }
+    return new MessageCollection($this->messageRepository->getByThread($thread));
   }
 
   /**
@@ -101,8 +97,8 @@ class MessageController extends Controller
    * @param  int  $id
    * @return \Illuminate\Http\Response
    */
-  public function destroy($id)
+  public function destroy(Thread $thread, Message $message)
   {
-    //
+    return new MessageResource($this->messageRepository->delete($message));
   }
 }

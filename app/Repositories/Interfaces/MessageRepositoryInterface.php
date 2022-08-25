@@ -13,4 +13,6 @@ interface MessageRepositoryInterface
   public function getById($id): Message;
 
   public function save(Thread $thread, array $values): Message;
+
+  public function delete(Message $message): Message;
 }

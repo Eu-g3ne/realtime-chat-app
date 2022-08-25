@@ -25,4 +25,10 @@ class MessageRepository implements MessageRepositoryInterface
     $thread->lastMessage()->associate($message->id)->save();
     return $message;
   }
+
+  public function delete(Message $message): Message
+  {
+    $message->delete();
+    return $message;
+  }
 }
