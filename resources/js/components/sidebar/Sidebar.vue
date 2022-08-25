@@ -52,12 +52,9 @@ import vMainMenu from "../menu/MainMenu.vue";
 import vSidebarHeader from "./SidebarHeader.vue";
 import vModal from "../modal/Modal.vue";
 import vTitle from "../layout/Title.vue";
-import vQuestionIcon from "../icons/QuestionIcon.vue";
-import vWarningIcon from "../icons/WarningIcon.vue";
 import vInfoIcon from "../icons/InfoIcon.vue";
 import vCancelButton from "../buttons/CancelButton.vue";
 import vAcceptButton from "../buttons/AcceptButton.vue";
-import vDangerButton from "../buttons/DangerButton.vue";
 import vCreateButton from "../buttons/CreateButton.vue";
 import vSelectCheckbox from "../SelectCheckbox.vue";
 import vTextInput from "../forms/inputs/TextInput.vue";
@@ -69,11 +66,8 @@ export default {
     vMainMenu,
     vSidebarHeader,
     vModal,
-    vQuestionIcon,
     vCancelButton,
-    vDangerButton,
     vAcceptButton,
-    vWarningIcon,
     vInfoIcon,
     vSelectCheckbox,
     vCreateButton,
