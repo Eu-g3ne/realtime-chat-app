@@ -2,16 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Events\SendMessage;
-use App\Exceptions\GeneralJsonException;
 use App\Http\Requests\Message\StoreRequest;
+use App\Http\Requests\Message\UpdateRequest;
 use App\Http\Resources\MessageCollection;
 use App\Http\Resources\MessageResource;
-use App\Http\Resources\UserCollection;
 use App\Models\Message;
 use App\Models\Thread;
 use App\Repositories\Interfaces\MessageRepositoryInterface;
-use Exception;
 use Illuminate\Http\Request;
 
 class MessageController extends Controller
@@ -35,16 +32,6 @@ class MessageController extends Controller
   }
 
   /**
-   * Show the form for creating a new resource.
-   *
-   * @return \Illuminate\Http\Response
-   */
-  public function create(Thread $thread)
-  {
-    //
-  }
-
-  /**
    * Store a newly created resource in storage.
    *
    * @param  \Illuminate\Http\Request  $request
@@ -53,8 +40,7 @@ class MessageController extends Controller
   public function store(Thread $thread, StoreRequest $request)
   {
     $message = $this->messageRepository->save($thread, $request->validated());
-    broadcast(new SendMessage($thread, $message))->toOthers();
-    return new MessageResource($message->load(['user', 'thread']));
+    return new MessageResource($message->load('user'));
   }
 
   /**
@@ -69,26 +55,16 @@ class MessageController extends Controller
   }
 
   /**
-   * Show the form for editing the specified resource.
-   *
-   * @param  int  $id
-   * @return \Illuminate\Http\Response
-   */
-  public function edit($id)
-  {
-    //
-  }
-
-  /**
    * Update the specified resource in storage.
    *
    * @param  \Illuminate\Http\Request  $request
    * @param  int  $id
    * @return \Illuminate\Http\Response
    */
-  public function update(Request $request, $id)
+  public function update(Thread $thread, Message $message, UpdateRequest $request)
   {
-    //
+    $message = $this->messageRepository->update($thread, $message, $request->validated());
+    return new MessageResource($message->load('user'));
   }
 
   /**
@@ -99,6 +75,7 @@ class MessageController extends Controller
    */
   public function destroy(Thread $thread, Message $message)
   {
-    return new MessageResource($this->messageRepository->delete($message));
+    $message = $this->messageRepository->delete($message);
+    return new MessageResource($message);
   }
 }

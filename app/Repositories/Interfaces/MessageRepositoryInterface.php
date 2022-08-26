@@ -14,5 +14,7 @@ interface MessageRepositoryInterface
 
   public function save(Thread $thread, array $values): Message;
 
+  public function update(Thread $thread, Message $message, array $values): Message;
+
   public function delete(Message $message): Message;
 }

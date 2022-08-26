@@ -31,7 +31,10 @@ Route::middleware('auth:sanctum')->group(function () {
       Route::prefix('messages')->group(function () {
         Route::get('/', [MessageController::class, 'index']);
         Route::post('/', [MessageController::class, 'store']);
-        Route::delete('/{message}', [MessageController::class, 'destroy'])->middleware('message-owner');
+        Route::middleware('message-owner')->group(function () {
+          Route::patch('/{message}', [MessageController::class, 'update']);
+          Route::delete('/{message}', [MessageController::class, 'destroy']);
+        });
       });
     });
   });

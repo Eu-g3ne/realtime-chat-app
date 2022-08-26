@@ -26,6 +26,12 @@ class MessageRepository implements MessageRepositoryInterface
     return $message;
   }
 
+  public function update(Thread $thread, Message $message, array $values): Message
+  {
+    $message->update($values);
+    return $message;
+  }
+
   public function delete(Message $message): Message
   {
     $message->delete();
