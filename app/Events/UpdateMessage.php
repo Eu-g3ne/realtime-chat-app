@@ -4,8 +4,6 @@ namespace App\Events;
 
 use App\Events\Abstracts\AbstractMessageEvent;
 use App\Http\Resources\MessageResource;
-use App\Models\Message;
-use App\Models\Thread;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -14,7 +12,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class SendMessage extends AbstractMessageEvent implements ShouldBroadcast
+class UpdateMessage extends AbstractMessageEvent implements ShouldBroadcast
 {
   use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -30,6 +28,6 @@ class SendMessage extends AbstractMessageEvent implements ShouldBroadcast
    */
   public function broadcastOn()
   {
-    return new PrivateChannel("thread.{$this->thread->id}");
+    return new PrivateChannel('channel-name');
   }
 }
