@@ -14,14 +14,6 @@ use Illuminate\Support\Facades\Broadcast;
 |
 */
 
-Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
-  return (int) $user->id === (int) $id;
-});
-
 Broadcast::channel('thread.{threadId}', function ($user, $threadId) {
   return Thread::findOrFail($threadId)->users->pluck('id')->contains($user->id);
-});
-
-Broadcast::channel('channel', function ($user) {
-  return true;
 });
