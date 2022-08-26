@@ -18,7 +18,8 @@ class EnsureUserIsParticipantOfTheThread
    */
   public function handle(Request $request, Closure $next)
   {
-    if (auth()->user()->threads->contains($request->route('thread'))) {
+    $thread = $request->route('thread'); // explicit binded
+    if ($thread->users->containsStrict('id', auth()->id())) {
       return $next($request);
     }
     throw new ForbiddenException('You are not a member of the thread ');

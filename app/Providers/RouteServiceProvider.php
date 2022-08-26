@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Message;
+use App\Models\Thread;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
@@ -35,6 +37,9 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Route::model('thread', Thread::class);
+        Route::model('message', Message::class);
+
         $this->configureRateLimiting();
 
         $this->routes(function () {
