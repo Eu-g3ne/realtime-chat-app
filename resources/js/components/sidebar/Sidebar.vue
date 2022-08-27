@@ -10,7 +10,7 @@
       </div>
     </div>
     <div class="h-full overflow-y-scroll">
-      <v-thread
+      <v-thread-item
         v-for="thread in threads"
         :key="thread.id"
         :thread="thread"
@@ -47,7 +47,7 @@
 
 <script>
 import { mapGetters, mapActions } from "vuex";
-import vThread from "../thread/ThreadItem.vue";
+import vThreadItem from "../thread/ThreadItem.vue";
 import vMainMenu from "../menu/MainMenu.vue";
 import vSidebarHeader from "./SidebarHeader.vue";
 import vModal from "../modal/Modal.vue";
@@ -62,7 +62,7 @@ import vTextInput from "../forms/inputs/TextInput.vue";
 export default {
   name: "Sidebar",
   components: {
-    vThread,
+    vThreadItem,
     vMainMenu,
     vSidebarHeader,
     vModal,
