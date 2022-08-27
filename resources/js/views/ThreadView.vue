@@ -20,32 +20,69 @@
         />
       </div>
     </div>
-    <div class="flex flex-row justify-center items-center gap-2 px-5 mt-1 mb-2">
+    <div
+      class="flex flex-row justify-center items-center gap-2 px-5 mt-1 mb-2"
+      v-if="!isEditing"
+    >
       <input
         class="h-[50px] w-full rounded-xl block px-2 shadow-md"
         type="text"
-        v-model="newMessage"
-        @keydown.enter="sendMessage(id, newMessage)"
+        v-model="newMessage.body"
+        @keydown.enter="sendMessage(id, newMessage.body)"
       />
-      <v-send-button @click="sendMessage(id, newMessage)"></v-send-button>
+      <v-send-button @click="sendMessage(id, newMessage.body)"></v-send-button>
+    </div>
+    <div
+      class="flex flex-row justify-center items-center gap-2 px-5 mt-1 mb-2"
+      v-else
+    >
+      <input
+        ref="input"
+        class="h-[50px] w-full rounded-xl block px-2 shadow-md"
+        type="text"
+        v-model="newMessage.body"
+        @keydown.enter="confirmUpdate(newMessage)"
+      />
+      <v-accept-button @click="confirmUpdate(newMessage)">
+        <v-confirm-icon />
+      </v-accept-button>
+      <v-danger-button @click="cancelUpdate()">
+        <v-cross-icon />
+      </v-danger-button>
     </div>
   </div>
 </template>
 
 <script>
+import _ from "lodash";
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import vMessage from "../components/thread/ThreadMessage.vue";
 import vSendButton from "../components/buttons/SendButton.vue";
+import vAcceptButton from "../components/buttons/AcceptButton.vue";
+import vDangerButton from "../components/buttons/DangerButton.vue";
+import vConfirmIcon from "../components/icons/ConfirmIcon.vue";
+import vCrossIcon from "../components/icons/CrossIcon.vue";
 import vTextInput from "../components/forms/inputs/TextInput.vue";
 
 export default {
   data: function () {
     return {
-      newMessage: "",
+      newMessage: {
+        body: "",
+      },
+      isEditing: false,
     };
   },
   name: "ThreadView",
-  components: { vMessage, vSendButton, vTextInput },
+  components: {
+    vMessage,
+    vSendButton,
+    vTextInput,
+    vAcceptButton,
+    vDangerButton,
+    vConfirmIcon,
+    vCrossIcon,
+  },
   props: {
     id: {
       type: Number,
@@ -54,13 +91,19 @@ export default {
   },
   mounted() {
     this.fetchMessages(this.id);
-    window.Echo.private(`thread.${this.id}`).listen(
-      "SendMessage",
-      (message) => {
-        this.updateMessages([...this.messages, message]);
+    window.Echo.private(`thread.${this.id}`)
+      .listen("SendMessage", (message) => {
+        this.setMessages([...this.messages, message]);
         this.fetchThreads();
-      }
-    );
+      })
+      .listen("UpdateMessage", (message) => {
+        this.setMessages(
+          this.messages.map((msg) => (msg.id === message.id ? message : msg))
+        );
+      })
+      .listen("DeleteMessage", (message) => {
+        this.setMessages(this.messages.filter((msg) => msg.id !== message.id));
+      });
   },
   updated() {
     this.$nextTick(function () {
@@ -73,22 +116,38 @@ export default {
     },
   },
   methods: {
-    ...mapActions("message", ["fetchMessages", "addMessage", "removeMessage"]),
+    ...mapActions("message", [
+      "fetchMessages",
+      "addMessage",
+      "updateMessage",
+      "removeMessage",
+    ]),
     ...mapActions("thread", ["fetchThreads"]),
-    ...mapMutations("message", ["updateMessages"]),
+    ...mapMutations("message", ["setMessages"]),
     scrollToEnd() {
       this.$refs.messages.scrollTop = this.$refs.messages.scrollHeight;
     },
     sendMessage(id, newMessage) {
       this.scrollToEnd();
       this.addMessage({ threadId: id, message: newMessage });
-      this.newMessage = "";
+      this.newMessage = { body: "" };
     },
     edit(message) {
-      console.log(this.id, message);
+      this.isEditing = true;
+      this.newMessage = _.cloneDeep(message);
+      this.$nextTick(() => this.$refs.input.focus());
     },
     del(message) {
       this.removeMessage({ threadId: this.id, message });
+    },
+    confirmUpdate(message) {
+      this.updateMessage({ threadId: this.id, message: message });
+      this.newMessage = { body: "" };
+      this.isEditing = false;
+    },
+    cancelUpdate() {
+      this.newMessage = { body: "" };
+      this.isEditing = false;
     },
   },
   computed: {
