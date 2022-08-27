@@ -4,26 +4,13 @@
     class="max-w-[70%] w-fit"
     @contextmenu.prevent="show($event)"
   >
-    <v-context-menu
+    <v-message-context-menu
       v-if="isActionsVisible"
       :position="position"
       @hide="hide()"
-    >
-      <v-edit-button
-        class="p-1"
-        @click="edit()"
-      >
-        <span class="mr-3">Edit</span>
-        <v-edit-icon />
-      </v-edit-button>
-      <v-danger-button
-        class="p-1"
-        @click="del()"
-      >
-        <span class="mr-3">Delete</span>
-        <v-trash-icon />
-      </v-danger-button>
-    </v-context-menu>
+      @edit="edit()"
+      @del="del()"
+    />
     <div class="rounded-xl bg-green-400 flex justify-between">
       <span class="p-2 text-black">
         {{ message.body }}
@@ -42,11 +29,13 @@ import vEditIcon from "../icons/EditIcon.vue";
 import vEditButton from "../buttons/EditButton.vue";
 import vDangerButton from "../buttons/DangerButton.vue";
 
-import vContextMenu from "./ContextMenu.vue";
+import vContextMenu from "../contextmenu/ContextMenu.vue";
+import vMessageContextMenu from "../contextmenu/MessageContextMenu.vue";
 
 export default {
   components: {
     vContextMenu,
+    vMessageContextMenu,
     vTrashIcon,
     vEditIcon,
     vEditButton,
@@ -58,10 +47,6 @@ export default {
       position: {
         x: 0,
         y: 0,
-      },
-      vcoConfig: {
-        events: ["dblclick", "click", "contextmenu"],
-        handler: this.hide,
       },
     };
   },
