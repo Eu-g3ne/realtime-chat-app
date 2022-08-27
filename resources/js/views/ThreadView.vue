@@ -17,6 +17,7 @@
           :message="message"
           @edit="edit(message)"
           @delete="del(message)"
+          class="first:mt-auto"
         />
       </div>
     </div>
@@ -94,7 +95,6 @@ export default {
     window.Echo.private(`thread.${this.id}`)
       .listen("SendMessage", (message) => {
         this.setMessages([...this.messages, message]);
-        this.fetchThreads();
       })
       .listen("UpdateMessage", (message) => {
         this.setMessages(
@@ -122,7 +122,6 @@ export default {
       "updateMessage",
       "removeMessage",
     ]),
-    ...mapActions("thread", ["fetchThreads"]),
     ...mapMutations("message", ["setMessages"]),
     scrollToEnd() {
       this.$refs.messages.scrollTop = this.$refs.messages.scrollHeight;
