@@ -79,8 +79,10 @@ export default {
   },
   methods: {
     show(event) {
-      this.position = { x: event.pageX, y: event.pageY };
-      this.isActionsVisible = true;
+      if (this.authenticated.id === this.message.user.id) {
+        this.position = { x: event.pageX, y: event.pageY };
+        this.isActionsVisible = true;
+      }
     },
     hide() {
       this.isActionsVisible = false;
