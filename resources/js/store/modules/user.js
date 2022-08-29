@@ -41,7 +41,6 @@ export default {
             'nickname': nickname
           }
         }).then(res => {
-          console.log(_.map(res.data.users, 'nickname'));
           commit('setUsers', res.data.users);
         })
       }

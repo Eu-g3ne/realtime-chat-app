@@ -43,6 +43,7 @@
         type="text"
         v-model="newMessage.body"
         @keydown.enter="confirmUpdate(newMessage)"
+        @keydown.escape="cancelUpdate()"
       />
       <v-accept-button @click="confirmUpdate(newMessage)">
         <v-confirm-icon />
@@ -55,7 +56,6 @@
 </template>
 
 <script>
-import _ from "lodash";
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import vMessage from "../components/thread/ThreadMessage.vue";
 import vSendButton from "../components/buttons/SendButton.vue";

@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapMutations } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
 import vSearchInput from "./SearchInput.vue";
 
 export default {
