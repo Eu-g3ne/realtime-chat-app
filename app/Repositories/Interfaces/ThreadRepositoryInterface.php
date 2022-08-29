@@ -14,4 +14,8 @@ interface ThreadRepositoryInterface
   public function getById($id): Thread;
 
   public function save(array $values): Thread;
+
+  public function update(Thread $thread, array $values): Thread;
+
+  public function leave(Thread $thread): Thread;
 }

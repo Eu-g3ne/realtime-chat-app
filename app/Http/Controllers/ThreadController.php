@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Thread\StoreRequest;
+use App\Http\Requests\Thread\UpdateRequest;
 use App\Http\Resources\ParticipantCollection;
 use App\Http\Resources\ThreadCollection;
 use App\Http\Resources\ThreadResource;
@@ -64,19 +65,19 @@ class ThreadController extends Controller
    * @param  int  $id
    * @return \Illuminate\Http\Response
    */
-  public function update(Request $request, $id)
+  public function update(Thread $thread, UpdateRequest $request)
   {
-    //
+    return new ThreadResource($this->threadRepository->update($thread, $request->validated()));
   }
 
   /**
    * Remove the specified resource from storage.
    *
-   * @param  int  $id
+   * @param  Thread  $thread
    * @return \Illuminate\Http\Response
    */
-  public function destroy($id)
+  public function leave(Thread $thread)
   {
-    //
+    return new ThreadResource($this->threadRepository->leave($thread));
   }
 }

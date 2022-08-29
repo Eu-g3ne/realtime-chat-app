@@ -28,6 +28,8 @@ Route::middleware('auth:sanctum')->group(function () {
   Route::prefix('threads')->group(function () {
     Route::prefix('{thread}')->middleware('participant')->group(function () {
       Route::get('/', [ThreadController::class, 'participants']);
+      Route::patch('/', [ThreadController::class, 'update']);
+      Route::delete('/', [ThreadController::class, 'leave']);
       Route::prefix('messages')->group(function () {
         Route::get('/', [MessageController::class, 'index']);
         Route::post('/', [MessageController::class, 'store']);
