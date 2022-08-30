@@ -1,5 +1,4 @@
 import axios from "axios";
-import _ from "lodash";
 
 export default {
   namespaced: true,
@@ -35,7 +34,8 @@ export default {
         commit('updateThreads', response.data)
       });
     },
-    async addThread({commit, getters}, thread) {
+    async addThread({commit, getters}) {
+      const thread = { name:getters.thread.name, users: _.map(getters.thread.users, 'id') };
       await axios.post('/threads', {
         'name': thread.name,
         'users': thread.users

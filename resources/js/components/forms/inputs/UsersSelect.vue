@@ -1,6 +1,6 @@
 <template>
   <div class="h-96 flex flex-col gap-4">
-    <div v-if="thread.users.length">
+    <div v-if="thread.users && thread.users.length">
       <div>
         <v-title>Edit members:</v-title>
       </div>

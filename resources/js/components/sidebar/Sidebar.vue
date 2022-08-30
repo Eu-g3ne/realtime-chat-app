@@ -4,7 +4,7 @@
       <v-main-menu />
       <v-sidebar-header>{{ nickname }}</v-sidebar-header>
       <div class="ml-auto">
-        <v-create-button @click="newThreadModalVisible = true">
+        <v-create-button @click="openCreateModal()">
           Create thread
         </v-create-button>
       </div>
@@ -30,8 +30,7 @@
             <v-text-input v-model="thread.name" />
           </div>
           <div>
-            <v-title>Add members</v-title>
-            <v-select-checkbox />
+            <v-users-select :thread="thread" />
           </div>
         </div>
       </template>
@@ -46,7 +45,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions, mapMutations } from "vuex";
 import vThreadItem from "../thread/ThreadItem.vue";
 import vMainMenu from "../menu/MainMenu.vue";
 import vSidebarHeader from "./SidebarHeader.vue";
@@ -56,7 +55,7 @@ import vInfoIcon from "../icons/InfoIcon.vue";
 import vCancelButton from "../buttons/CancelButton.vue";
 import vAcceptButton from "../buttons/AcceptButton.vue";
 import vCreateButton from "../buttons/CreateButton.vue";
-import vSelectCheckbox from "../SelectCheckbox.vue";
+import vUsersSelect from "../forms/inputs/UsersSelect.vue";
 import vTextInput from "../forms/inputs/TextInput.vue";
 
 export default {
@@ -69,7 +68,7 @@ export default {
     vCancelButton,
     vAcceptButton,
     vInfoIcon,
-    vSelectCheckbox,
+    vUsersSelect,
     vCreateButton,
     vTitle,
     vTextInput,
@@ -88,9 +87,14 @@ export default {
   },
   methods: {
     ...mapActions("thread", ["fetchThreads", "addThread"]),
+    ...mapMutations("thread", ["setThread"]),
     createThread() {
       this.newThreadModalVisible = false;
-      this.addThread(this.thread);
+      this.addThread();
+    },
+    openCreateModal() {
+      this.setThread({ name: "", users: [] });
+      this.newThreadModalVisible = true;
     },
   },
 };
