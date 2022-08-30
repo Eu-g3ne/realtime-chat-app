@@ -22,7 +22,7 @@ export default {
     },
     membersById:(state) => (id) => {
       let thread = state.threads.find(thread => thread.id === id)
-      return thread ? thread.users.length : 0;
+      return thread ? thread.users.length + 1 : 0;
     },
     users(state) {
       return state.thread.users;

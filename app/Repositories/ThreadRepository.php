@@ -34,7 +34,7 @@ class ThreadRepository implements ThreadRepositoryInterface
   public function update(Thread $thread, array $values): Thread
   {
     $thread->update(['name' => $values['name']]);
-    $thread->users()->sync($values['users']);
+    $thread->users()->sync([...$values['users'], auth()->id()]);
     return $thread;
   }
 
