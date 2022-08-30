@@ -1,11 +1,9 @@
 <template>
   <div class="flex flex-col h-full">
-    <div class="w-full bg-white shadow-md p-2">
-      <div class="font-bold text-black text-lg">{{ nameById(this.id) }}</div>
-      <div class="font-light text-gray-500">
-        {{ membersById(this.id) }} members
-      </div>
-    </div>
+    <v-thread-header
+      :id="id"
+      @click="editThread()"
+    />
     <div
       class="p-5 h-full overflow-y-scroll"
       ref="messages"
@@ -52,11 +50,16 @@
         <v-cross-icon />
       </v-danger-button>
     </div>
+    <v-thread-edit-modal
+      v-if="isEditModalVisible"
+      @close="closeModal()"
+    />
   </div>
 </template>
 
 <script>
 import { mapActions, mapGetters, mapMutations } from "vuex";
+import vThreadHeader from "../components/thread/ThreadHeader.vue";
 import vMessage from "../components/thread/ThreadMessage.vue";
 import vSendButton from "../components/buttons/SendButton.vue";
 import vAcceptButton from "../components/buttons/AcceptButton.vue";
@@ -64,6 +67,7 @@ import vDangerButton from "../components/buttons/DangerButton.vue";
 import vConfirmIcon from "../components/icons/ConfirmIcon.vue";
 import vCrossIcon from "../components/icons/CrossIcon.vue";
 import vTextInput from "../components/forms/inputs/TextInput.vue";
+import vThreadEditModal from "../components/modal/ThreadEditModal.vue";
 
 export default {
   data: function () {
@@ -72,10 +76,13 @@ export default {
         body: "",
       },
       isEditing: false,
+      isEditModalVisible: false,
+      thread: {},
     };
   },
   name: "ThreadView",
   components: {
+    vThreadHeader,
     vMessage,
     vSendButton,
     vTextInput,
@@ -83,6 +90,7 @@ export default {
     vDangerButton,
     vConfirmIcon,
     vCrossIcon,
+    vThreadEditModal,
   },
   props: {
     id: {
@@ -108,6 +116,7 @@ export default {
   updated() {
     this.$nextTick(function () {
       this.scrollToEnd();
+      this.thread = _.find(this.threads, { id: this.id });
     });
   },
   watch: {
@@ -123,6 +132,7 @@ export default {
       "removeMessage",
     ]),
     ...mapMutations("message", ["setMessages"]),
+    ...mapMutations("thread", ["setThread"]),
     scrollToEnd() {
       this.$refs.messages.scrollTop = this.$refs.messages.scrollHeight;
     },
@@ -148,10 +158,17 @@ export default {
       this.newMessage = { body: "" };
       this.isEditing = false;
     },
+    editThread() {
+      this.setThread(this.thread);
+      this.isEditModalVisible = true;
+    },
+    closeModal() {
+      this.isEditModalVisible = false;
+    },
   },
   computed: {
     ...mapGetters("message", ["messages"]),
-    ...mapGetters("thread", ["nameById", "membersById"]),
+    ...mapGetters("thread", ["nameById", "membersById", "threads"]),
   },
 };
 </script>

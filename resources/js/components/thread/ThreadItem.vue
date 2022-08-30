@@ -10,13 +10,6 @@
         class="h-20 duration-200 hover:bg-gray-200 cursor-pointer p-2 m-2 rounded-xl"
         @contextmenu.prevent="show($event)"
       >
-        <v-thread-context-menu
-          v-if="isActionsVisible"
-          :position="position"
-          @hide="hide()"
-          @edit="edit()"
-          @leave="confirmLeave()"
-        />
         <div class="font-bold text-black text-lg">{{ this.thread.name }}</div>
         <div>
           <span class="font-normal text-gray-700">{{ nickname }}</span>
@@ -24,15 +17,20 @@
         </div>
       </div>
     </router-link>
+    <v-thread-context-menu
+      v-if="isActionsVisible"
+      :position="position"
+      @hide="hide()"
+      @edit="edit()"
+      @leave="showConfirmLeave()"
+    />
     <v-thread-edit-modal
       v-if="isEditModalVisible"
-      @accept="confirmEdit()"
       @close="close()"
-      @leave="confirmLeave()"
     />
     <v-confirmation-modal
-      v-if="isConfirmationVisible"
-      @accept="accept()"
+      v-if="isConfirmLeaveVisible"
+      @accept="confirmLeave()"
       @cancel="cancel()"
     />
   </div>
@@ -56,7 +54,7 @@ export default {
     return {
       isActionsVisible: false,
       isEditModalVisible: false,
-      isConfirmationVisible: false,
+      isConfirmLeaveVisible: false,
       action: "",
       position: {
         x: 0,
@@ -67,25 +65,17 @@ export default {
   methods: {
     ...mapActions("thread", ["updateThread", "leaveFromThread"]),
     ...mapMutations("thread", ["setThread"]),
-    accept() {
-      switch (this.action) {
-        case "edit":
-          this.updateThread();
-          break;
-        case "leave":
-          this.setThread(this.thread);
-          this.leaveFromThread();
-          break;
-      }
-    },
-    confirmEdit() {
-      this.action = "edit";
-      this.isConfirmationVisible = true;
+    showConfirmLeave() {
+      this.hide();
+      this.isConfirmLeaveVisible = true;
     },
     confirmLeave() {
-      this.hide();
-      this.action = "leave";
-      this.isConfirmationVisible = true;
+      this.setThread(this.thread);
+      this.leaveFromThread();
+      this.setThread({});
+      if (this.$route.path !== "/") {
+        this.$router.push({ name: "index" });
+      }
     },
     show(event) {
       this.position = { x: event.pageX, y: event.pageY };
@@ -106,7 +96,7 @@ export default {
       this.isEditModalVisible = false;
     },
     cancel() {
-      this.isConfirmationVisible = false;
+      this.isConfirmLeaveVisible = false;
     },
   },
   computed: {
